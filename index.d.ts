@@ -1,4 +1,42 @@
-// index.d.ts
+import { DKIM } from './lib/dkim/index.js';
+import { MessageParser } from './lib/dkim/message-parser.js';
+import { RelaxedBody } from './lib/dkim/relaxed-body.js';
+
+// =================================== lib/dkim/index.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class DKIM{}; // DomainKeys Identified Mail 签名处理类
+ * ```
+ * >查看定义:@see {@link DKIM}
+ */
+declare module './lib/dkim/index.js' {
+    export * from './lib/dkim/index.js';
+}
+
+// =================================== lib/dkim/message-parser.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class MessageParser{}; // 该类实例是一个转换流,用于将消息头与消息体分离;
+ * ```
+ * >查看定义:@see {@link MessageParser}
+ */
+declare module './lib/dkim/message-parser.js' {
+    export * from './lib/dkim/message-parser.js';
+}
+
+// =================================== lib/dkim/relaxed-body.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class RelaxedBody{}; // 宽松规范化邮件正文的转换流,实现DKIM签名中的relaxed body canonicalization
+ * ```
+ * >查看定义:@see {@link RelaxedBody}
+ */
+declare module './lib/dkim/relaxed-body.js' {
+    export * from './lib/dkim/relaxed-body.js';
+}
 /**
  * 邮件发送模块 主要功能：
  * ```js
@@ -6,7 +44,7 @@
  * validateConfig();    // 验证配置
  * ```
  * ---
- *   -
+ * >
  * ```js
  *  // 发送邮件示例
  *  import { createTransport } from 'flun-mail';
@@ -36,9 +74,10 @@
  *      else console.log('发送成功:', info.response);
  *  });
  * ```
- *   -
+ * ---
+ * >查看定义:@see {@link createTransport}、{@link validateConfig}
  */
-declare module 'flun-mail' {
+declare module './index.js' {
     // ==================== 模块依赖 ====================
     import { EventEmitter } from 'events';
 
@@ -57,7 +96,7 @@ declare module 'flun-mail' {
      *
      * @param transporter 传输器配置对象、连接URL字符串或已创建的传输器实例
      * @param defaults 默认邮件选项
-     * @returns Mail实例
+     * @returns Mailer实例
      *
      * @example
      * ```javascript
@@ -76,7 +115,7 @@ declare module 'flun-mail' {
      * const urlTransporter = createTransport('smtps://user:pass@smtp.example.com:465');
      * ```
      */
-    export function createTransport(transporter: TransportConfig, defaults?: MailData): Mail;
+    export function createTransport(transporter: TransportConfig, defaults?: MailData): Mailer;
 
     /**
      * 验证邮件配置
@@ -137,7 +176,7 @@ declare module 'flun-mail' {
         /** 传输器版本 */
         version?: string;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
         /** 配置选项 */
         options?: SpecificTransportConfig;
         /** 日志记录器 */
@@ -184,9 +223,9 @@ declare module 'flun-mail' {
     /**
      * 邮件主类
      *
-     * 邮件发送的核心类，管理传输器实例并提供邮件发送功能
+     * 邮件发送的核心类,管理传输器实例并提供邮件发送功能
      */
-    export class Mail {
+    export class Mailer {
         constructor(transporter: Transporter, options?: SpecificTransportConfig, defaults?: MailData);
 
         /** 选项配置 */
@@ -232,7 +271,7 @@ declare module 'flun-mail' {
      * 邮件消息类
      */
     export class MailMessage {
-        constructor(mailer: Mail, data: MailData);
+        constructor(mailer: Mailer, data: MailData);
         /** 邮件数据 */
         data: MailData;
         /** 邮件消息对象 */
@@ -489,7 +528,7 @@ declare module 'flun-mail' {
         /** 日志记录器 */
         logger?: Logger;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
     }
 
     // ==================== SMTP连接池传输器配置 ====================
@@ -545,7 +584,7 @@ declare module 'flun-mail' {
         /** 选项配置 */
         options: SmtpPoolConfig;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
     }
 
     // ==================== Sendmail传输器配置 ====================
@@ -609,7 +648,7 @@ declare module 'flun-mail' {
         /** 子进程创建函数 */
         _spawn: typeof import('child_process')['spawn'];
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
 
         // 注意：SendmailTransport不实现on、close、isIdle、verify方法
     }
@@ -665,7 +704,7 @@ declare module 'flun-mail' {
         /** 是否使用Windows换行符 */
         winbreak: boolean;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
 
         // 注意：StreamTransport不实现on、close、isIdle、verify方法
     }
@@ -725,7 +764,7 @@ declare module 'flun-mail' {
         /** 选项配置 */
         options: JsonTransportConfig;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
 
         // 注意：JsonTransport不实现on、close、isIdle、verify方法
     }
@@ -799,7 +838,7 @@ declare module 'flun-mail' {
         /** 版本号 */
         version: string;
         /** 关联的Mail实例 */
-        mailer?: Mail;
+        mailer?: Mailer;
 
         // 注意：SesTransport不实现on、close、isIdle方法
     }

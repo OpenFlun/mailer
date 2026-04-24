@@ -31,7 +31,7 @@ import { regexs, resetRegex } from './lib/regexs.js';
 import { SendmailTransport } from './lib/sendmail-transport.js';
 import { SesTransport } from './lib/ses-transport.js';
 import {
-    PK, regexs, resetRegex, format, isIP, netConnect, dnsLookup, dnsResolve, fsReadStream, osHostname, nmfetch, newURL,
+    PK, regexs, resetRegex, dnsLookup, dnsResolve, format, isIP, netConnect, fsReadStream, osHostname, nmfetch, newURL,
     resolveHostname, parseConnectionUrl, getLogger, callbackPromise, parseDataURI, resolveContent, resolveStream, assign,
     encodeXText, initSmtpConstructor, getSocket, cleanup, createSmtpConnection, setupConnectionHandlers,
     performSmtpAuthentication, createAuthConfig, prepareMessageForSending, handleSendResult, verifySmtp
@@ -405,11 +405,11 @@ declare module './lib/ses-transport.js' {
  * const PK={};                 // package.json 包对象(含 name,,version,,homepage);
  * const regexs={};             // 常用正则表达式集合;
  * resetRegex();                // 重置正则表达式（清除 lastIndex）;
+ * dnsLookup();                 // dns.lookup 的引用;
+ * dnsResolve();                // dns.resolve 的引用;
  * format();                    // util.format 的引用;
  * isIP();                      // 检查字符串是否为 IP 地址（v4 或 v6）;
  * netConnect();                // net.connect 的引用;
- * dnsLookup();                 // dns.lookup 的引用;
- * dnsResolve();                // dns.resolve 的引用;
  * fsReadStream();              // fs.createReadStream 的引用;
  * osHostname();                // os.hostname 的引用;
  * nmfetch();                   // 自定义 fetch 实现;
@@ -425,17 +425,17 @@ declare module './lib/ses-transport.js' {
  * encodeXText();               // XText 编码（SMTP 扩展）;
  * initSmtpConstructor();       // 初始化 SMTP 传输对象的公共构造函数逻辑;
  * getSocket();                 // 获取代理套接字的占位函数;
- * cleanup();                   // 标记状态对象为已返回;
+ * cleanup();                   // 用于清理状态对象;
  * createSmtpConnection();      // 创建并配置 SMTP 连接;
- * setupConnectionHandlers();   // 设置连接的错误与结束事件通用处理;
+ * setupConnectionHandlers();   // 处理连接错误与结束事件通用函数;
  * performSmtpAuthentication(); // 执行 SMTP 认证的通用逻辑;
  * createAuthConfig();          // 创建认证配置对象;
  * prepareMessageForSending();  // 发送邮件前的通用预处理;
  * handleSendResult();          // 处理发送结果的通用逻辑;
  * verifySmtp();                // 验证 SMTP 配置的通用函数;
  * ```
- * >查看定义:@see {@link PK}、{@link regexs}、{@link resetRegex}、{@link format}、{@link isIP}、{@link netConnect}、
- * {@link dnsLookup}、{@link dnsResolve}、{@link fsReadStream}、{@link osHostname}、{@link nmfetch}、
+ * >查看定义:@see {@link PK}、{@link regexs}、{@link resetRegex}、{@link dnsLookup}、{@link dnsResolve}、{@link format}、
+ * {@link isIP}、{@link netConnect}、{@link fsReadStream}、{@link osHostname}、{@link nmfetch}、
  * {@link newURL}、{@link resolveHostname}、
  * {@link parseConnectionUrl}、{@link getLogger}、{@link callbackPromise}、
  * {@link parseDataURI}、{@link resolveContent}、{@link resolveStream}、

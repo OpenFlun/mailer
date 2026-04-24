@@ -392,7 +392,7 @@ declare module './lib/sendmail-transport.js' {
 /**
  * ```js
  * // 文件导出内容
- * SesTransport(); // 生成用于 AWS SES 的传输对象
+ * class SesTransport{}; // 生成用于 AWS SES 的传输对象
  * ```
  * >查看定义:@see {@link SesTransport}
  */
@@ -593,16 +593,9 @@ declare module './index.js' {
 
     /**
      * 传输器配置类型
-     * 可以是：连接URL字符串、具体的配置对象或已创建的传输器实例
+     * 可以是：连接URL字符串、已封装好的传输器实例、或具体的传输器配置对象
      */
-    export type TransportConfig = string | SpecificTransportConfig | Transporter;
-
-    /**
-     * 所有具体传输器配置的联合类型
-     * 用于区分不同类型的传输器配置
-     */
-    export type SpecificTransportConfig = | SmtpConfig | SmtpPoolConfig | SendmailConfig | StreamTransportConfig
-        | JsonTransportConfig | SesTransportConfig;
+    export type TransportConfig = string | Transporter | SpecificTransportConfig;
 
     /**
      * 传输器接口
@@ -631,6 +624,152 @@ declare module './index.js' {
     }
 
     /**
+     * 邮件发送器实例
+     * 由 createTransport 返回,提供 sendMail、close 等核心方法
+     */
+    export interface Mailer extends EventEmitter {
+        /**
+         * 发送邮件
+         * @param mail 邮件内容
+         * @param callback 完成回调
+         */
+        sendMail(mail: MailData, callback: (err: Error | null, info: SentMessageInfo) => void): void;
+        /**
+         * 发送邮件（Promise 形式）
+         * @param mail 邮件内容
+         */
+        sendMail(mail: MailData): Promise<SentMessageInfo>;
+
+        /** 关闭传输器及连接池 */
+        close(): void;
+
+        /**
+         * 验证传输器连接是否可用
+         * @param callback 可选回调
+         */
+        verify(callback?: (err: Error | null, success: boolean) => void): void | Promise<boolean>;
+
+        /** 传输器实例 */
+        transporter: Transporter;
+        /** 当前传输器使用的选项 */
+        options: SpecificTransportConfig;
+    }
+
+    /**
+     * 具体的传输器配置对象
+     */
+    export interface SpecificTransportConfig {
+        /** 连接URL（优先级高于其他配置） */
+        url?: string;
+        /** SMTP服务器地址 */
+        host?: string;
+        /** SMTP服务端口 */
+        port?: number;
+        /** 是否使用SSL/TLS */
+        secure?: boolean;
+        /** 认证信息 */
+        auth?: {
+            /** 用户名 */
+            user: string;
+            /** 密码 */
+            pass?: string;
+            /** XOAUTH2令牌 */
+            xoauth2?: string;
+            /** OAuth2配置 */
+            oauth2?: any;
+        };
+        /** 预定义服务名 */
+        service?: string;
+        /** TLS额外配置 */
+        tls?: object | boolean;
+        /** 是否启用连接池 */
+        pool?: boolean;
+        /** 连接池最大连接数 */
+        maxConnections?: number;
+        /** 单个连接最大消息数 */
+        maxMessages?: number;
+        /** 使用 sendmail 发送（布尔值或sendmail路径） */
+        sendmail?: boolean | string;
+        /** 使用流传输器输出 */
+        streamTransport?: boolean;
+        /** 使用 JSON 传输器输出 */
+        jsonTransport?: boolean;
+        /** Amazon SES 配置 */
+        SES?: {
+            [key: string]: any;
+        };
+        /** 自定义传输器发送方法（若直接提供传输器实例则无需配置） */
+        send?: (mail: MailMessage, callback: (err: Error | null, info: SentMessageInfo) => void) => void;
+        /** 其他扩展字段 */
+        [key: string]: any;
+    }
+
+    /**
+     * 邮件数据对象,描述邮件内容及收件人信息
+     */
+    export interface MailData {
+        /** 发件人地址（格式："名称 <地址>" 或纯地址） */
+        from?: string;
+        /** 收件人地址（字符串或数组） */
+        to?: string | string[];
+        /** 抄送 */
+        cc?: string | string[];
+        /** 密送 */
+        bcc?: string | string[];
+        /** 邮件主题 */
+        subject?: string;
+        /** 纯文本内容 */
+        text?: string;
+        /** HTML内容（优先级高于纯文本） */
+        html?: string;
+        /** 附件列表 */
+        attachments?: Attachment[];
+        /** 邮件头部 */
+        headers?: { [key: string]: string };
+        /** 消息ID */
+        messageId?: string;
+        /** 优先级 */
+        priority?: 'high' | 'normal' | 'low';
+        /** 其他自定义字段 */
+        [key: string]: any;
+    }
+
+    /**
+     * 内部使用的邮件消息对象（传递给底层传输器）
+     */
+    export interface MailMessage {
+        /** 信封信息 */
+        envelope?: {
+            from: string;
+            to: string[];
+        };
+        /** 原始邮件数据 */
+        data?: string | Buffer | object;
+        /** 消息内容（可能为字符串或Buffer） */
+        message?: string | Buffer;
+        /** 其他传输器需要的元数据 */
+        [key: string]: any;
+    }
+
+    /**
+     * 邮件附件描述
+     */
+    export interface Attachment {
+        /** 文件名 */
+        filename?: string;
+        /** 内容（支持字符串、Buffer、流） */
+        content?: string | Buffer | NodeJS.ReadableStream;
+        /** 文件路径 */
+        path?: string;
+        /** MIME类型 */
+        contentType?: string;
+        /** 内嵌ID（用于html内嵌图片） */
+        cid?: string;
+        /** 编码 */
+        encoding?: string;
+    }
+
+    /**
      * 邮件发送结果
      */
     export interface SentMessageInfo {
@@ -640,11 +779,11 @@ declare module './index.js' {
         message?: string | object;
         /** 原始响应 */
         response?: string;
-        /** 收件人列表 */
+        /** 实际接受的收件人列表 */
         accepted?: string[];
         /** 被拒绝的收件人列表 */
         rejected?: string[];
-        /** 等待的收件人列表 */
+        /** 等待处理的收件人列表 */
         pending?: string[];
         /** 信封信息 */
         envelope?: {
@@ -663,5 +802,15 @@ declare module './index.js' {
         errors: string[];
         /** 警告信息列表 */
         warnings?: string[];
+    }
+
+    /**
+     * 日志记录器接口（传输器内部使用）
+     */
+    export interface Logger {
+        info(...args: any[]): void;
+        debug(...args: any[]): void;
+        error(...args: any[]): void;
+        warn(...args: any[]): void;
     }
 }

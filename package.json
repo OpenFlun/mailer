@@ -1,6 +1,6 @@
 {
   "name": "flun-mail",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A powerful and flexible email sending library for Node.js with multiple transport support (SMTP, SMTP Pool, Sendmail, Stream, JSON, SES)",
   "type": "module",
   "exports": {

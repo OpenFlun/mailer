@@ -31,12 +31,14 @@ import { regexs, resetRegex } from './lib/regexs.js';
 import { SendmailTransport } from './lib/sendmail-transport.js';
 import { SesTransport } from './lib/ses-transport.js';
 import {
-    PK, regexs, resetRegex, dnsLookup, dnsResolve, format, isIP, netConnect, fsReadStream, osHostname, nmfetch, newURL,
-    resolveHostname, parseConnectionUrl, getLogger, callbackPromise, parseDataURI, resolveContent, resolveStream, assign,
-    encodeXText, initSmtpConstructor, getSocket, cleanup, createSmtpConnection, setupConnectionHandlers,
+    PK, regexs, resetRegex, dnsLookup, dnsResolve, format, isIP, netConnect, fsReadStream, osHostname, nmfetch,
+    getLogger, resolveHostname, newURL, parseConnectionUrl, parseDataURI, callbackPromise, resolveStream, resolveContent,
+    assign, encodeXText, initSmtpConstructor, getSocket, cleanup, createSmtpConnection, setupConnectionHandlers,
     performSmtpAuthentication, createAuthConfig, prepareMessageForSending, handleSendResult, verifySmtp
 } from './lib/shared.js';
-import { 填充模_ } from './填充模.js';
+import { SmtpTransport } from './lib/smtp-transport.js';
+import { StreamTransport } from './lib/stream-transport.js';
+import { XOAuth2 } from './lib/xoauth2.js';
 
 // =================================== lib/dkim/index.js ===================================
 /**
@@ -413,14 +415,14 @@ declare module './lib/ses-transport.js' {
  * fsReadStream();              // fs.createReadStream 的引用;
  * osHostname();                // os.hostname 的引用;
  * nmfetch();                   // 自定义 fetch 实现;
- * newURL();                    // 安全地创建 URL 对象;
- * resolveHostname();           // 解析主机名，支持 DNS 缓存与 IPv4/IPv6;
- * parseConnectionUrl();        // 解析连接 URL 为配置对象;
  * getLogger();                 // 创建 bunyan 兼容的日志记录器;
- * callbackPromise();           // 创建 Promise 回调包装器（resolve, reject）;
+ * resolveHostname();           // 解析主机名,支持 DNS 缓存与 IPv4/IPv6;
+ * newURL();                    // 安全地创建 URL 对象;
+ * parseConnectionUrl();        // 解析连接 URL 为配置对象;
  * parseDataURI();              // 解析 Data URI 字符串;
- * resolveContent();            // 解析字符串或 Buffer 值的内容;
+ * callbackPromise();           // 创建 Promise 回调包装器（resolve, reject）;
  * resolveStream();             // 将可读流完整读取到 Buffer 中;
+ * resolveContent();            // 解析字符串或 Buffer 值的内容;
  * assign();                    // 合并对象属性（深度合并 tls 与 auth）;
  * encodeXText();               // XText 编码（SMTP 扩展）;
  * initSmtpConstructor();       // 初始化 SMTP 传输对象的公共构造函数逻辑;
@@ -435,18 +437,51 @@ declare module './lib/ses-transport.js' {
  * verifySmtp();                // 验证 SMTP 配置的通用函数;
  * ```
  * >查看定义:@see {@link PK}、{@link regexs}、{@link resetRegex}、{@link dnsLookup}、{@link dnsResolve}、{@link format}、
- * {@link isIP}、{@link netConnect}、{@link fsReadStream}、{@link osHostname}、{@link nmfetch}、
- * {@link newURL}、{@link resolveHostname}、
- * {@link parseConnectionUrl}、{@link getLogger}、{@link callbackPromise}、
- * {@link parseDataURI}、{@link resolveContent}、{@link resolveStream}、
- * {@link assign}、{@link encodeXText}、{@link initSmtpConstructor}、
- * {@link getSocket}、{@link cleanup}、{@link createSmtpConnection}、
- * {@link setupConnectionHandlers}、{@link performSmtpAuthentication}、
- * {@link createAuthConfig}、{@link prepareMessageForSending}、
- * {@link handleSendResult}、{@link verifySmtp}
+ * {@link isIP}、{@link netConnect}、{@link fsReadStream}、{@link osHostname}、{@link nmfetch}、{@link getLogger}、
+ * {@link resolveHostname}、{@link newURL}、{@link parseConnectionUrl}、{@link parseDataURI}、{@link callbackPromise}、
+ * {@link resolveStream}、{@link resolveContent}、{@link assign}、{@link encodeXText}、{@link initSmtpConstructor}、
+ * {@link getSocket}、{@link cleanup}、{@link createSmtpConnection}、{@link setupConnectionHandlers}、
+ * {@link performSmtpAuthentication}、{@link createAuthConfig}、 {@link prepareMessageForSending}、{@link handleSendResult}、
+ * {@link verifySmtp}
  */
 declare module './lib/shared.js' {
     export * from './lib/shared.js';
+}
+
+// =================================== lib/smtp-transport.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class SmtpTransport{}; // 生成SMTP传输对象,用于标准SMTP邮件发送,适用于大多数邮件服务商;
+ * ```
+ * >查看定义:@see {@link SmtpTransport}
+ */
+declare module './lib/smtp-transport.js' {
+    export * from './lib/smtp-transport.js';
+}
+
+// =================================== lib/stream-transport.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class StreamTransport{}; // 生成流传输对象,用于将邮件发送到标准输入/输出流;
+ * ```
+ * >查看定义:@see {@link StreamTransport}
+ */
+declare module './lib/stream-transport.js' {
+    export * from './lib/stream-transport.js';
+}
+
+// =================================== lib/xoauth2.js ===================================
+/**
+ * ```js
+ * // 文件导出内容
+ * class XOAuth2{}; // Gmail 的 XOAUTH2 access_token 生成器,用于生成基于 OAuth2 的访问令牌,支持自动刷新功能;
+ * ```
+ * >查看定义:@see {@link XOAuth2}
+ */
+declare module './lib/xoauth2.js' {
+    export * from './lib/xoauth2.js';
 }
 
 /**
@@ -532,7 +567,7 @@ declare module './index.js' {
     /**
      * 验证邮件配置
      *
-     * 验证传入的配置对象是否有效，返回包含验证状态、错误和警告信息的对象
+     * 验证传入的配置对象是否有效,返回包含验证状态、错误和警告信息的对象
      *
      * @param config 要验证的配置对象或URL字符串
      * @returns 验证结果对象
@@ -629,634 +664,4 @@ declare module './index.js' {
         /** 警告信息列表 */
         warnings?: string[];
     }
-
-    // ==================== 核心类定义 ====================
-
-    /**
-     * 邮件主类
-     *
-     * 邮件发送的核心类,管理传输器实例并提供邮件发送功能
-     */
-    export class Mailer {
-        constructor(transporter: Transporter, options?: SpecificTransportConfig, defaults?: MailData);
-
-        /** 选项配置 */
-        options: SpecificTransportConfig;
-        /** 默认配置 */
-        _defaults: MailData;
-        /** 传输器实例 */
-        transporter: Transporter;
-        /** 日志记录器 */
-        logger: Logger;
-        /** DKIM实例 */
-        dkim: DKIM;
-        /** 元数据存储 */
-        meta: Map<string, any>;
-
-        /**
-         * 发送邮件
-         * @param data 邮件数据
-         * @param callback 回调函数（可选）
-         * @returns Promise<SentMessageInfo>
-         */
-        sendMail(data: MailData, callback?: (err: Error | null, info: SentMessageInfo) => void): Promise<SentMessageInfo>;
-
-        /** 使用插件 */
-        use(step: 'compile' | 'stream', plugin: (mail: MailMessage, callback: (err?: Error) => void) => void): this;
-        /** 获取版本字符串 */
-        getVersionString(): string;
-        /** 设置代理 */
-        setupProxy(proxyUrl: string): void;
-        /** 设置元数据 */
-        set(key: string, value: any): this;
-        /** 获取元数据 */
-        get(key: string): any;
-        /** 关闭传输器 */
-        close(): void | boolean | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle(): boolean;
-        /** 验证传输器 */
-        verify(): void | boolean | Promise<boolean>;
-    }
-
-    /**
-     * 邮件消息类
-     */
-    export class MailMessage {
-        constructor(mailer: Mailer, data: MailData);
-        /** 邮件数据 */
-        data: MailData;
-        /** 邮件消息对象 */
-        message: MailComposer;
-        /** 设置邮件头 */
-        setMailerHeader(): void;
-        /** 设置优先级头 */
-        setPriorityHeaders(): void;
-        /** 设置列表头 */
-        setListHeaders(): void;
-        /** 解析内容 */
-        resolveContent(obj: any, key: string, callback: (err: Error | null, content: any) => void): void;
-    }
-
-    /**
-     * 邮件组合器类
-     */
-    export class MailComposer {
-        constructor(data: MailData);
-        /** 编译邮件 */
-        compile(): MailComposer;
-        /** 处理函数 */
-        processFunc(handler: (input: any) => any): void;
-        /** 获取消息ID */
-        messageId(): string;
-    }
-
-    /**
-     * DKIM类
-     */
-    export class DKIM {
-        constructor(options: DKIMOptions);
-        /** 签名 */
-        sign(input: any): any;
-        /** 密钥列表 */
-        keys: DKIMKey[];
-    }
-
-    // ==================== 邮件数据相关接口 ====================
-
-    /**
-     * 邮件数据接口
-     */
-    export interface MailData {
-        /** 发件人 */
-        from?: string;
-        /** 收件人 */
-        to?: string | string[];
-        /** 抄送 */
-        cc?: string | string[];
-        /** 密送 */
-        bcc?: string | string[];
-        /** 回复地址 */
-        replyTo?: string | string[];
-        /** 主题 */
-        subject?: string;
-        /** 纯文本内容 */
-        text?: string;
-        /** HTML内容 */
-        html?: string;
-        /** 附件 */
-        attachments?: Attachment[];
-        /** DKIM配置 */
-        dkim?: DKIMOptions;
-        /** 是否附加数据URL图片 */
-        attachDataUrls?: boolean;
-        /** 优先级 */
-        priority?: 'high' | 'normal' | 'low';
-        /** 邮件头 */
-        headers?: Record<string, string | string[]>;
-        /** 消息ID */
-        messageId?: string;
-    }
-
-    /**
-     * 附件接口
-     */
-    export interface Attachment {
-        /** 文件路径 */
-        path?: string;
-        /** 内容ID（用于内联附件） */
-        cid?: string;
-        /** 文件名 */
-        filename?: string;
-        /** 文件内容 */
-        content?: string | Buffer;
-        /** 内容类型 */
-        contentType?: string;
-        /** 编码 */
-        encoding?: string;
-    }
-
-    // ==================== 基础配置接口 ====================
-
-    /**
-     * 基础传输器配置
-     * 包含所有传输器通用的配置选项
-     */
-    export interface BaseTransportConfig {
-        /** 连接URL（优先级高于其他配置） */
-        url?: string;
-        /** 代理配置 */
-        proxy?: string;
-        /** 日志配置 */
-        logger?: boolean | LoggerOptions;
-        /** 组件名称（用于日志记录） */
-        component?: string;
-    }
-
-    /**
-     * 认证选项
-     */
-    export interface AuthOptions {
-        /** 用户名(邮箱地址) */
-        user: string;
-        /** 密码(邮箱密码) */
-        pass?: string;
-        /** OAuth2配置 */
-        oauth2?: object;
-        /** XOAuth2配置 */
-        xoauth2?: object;
-    }
-
-    /**
-     * DKIM配置选项
-     */
-    export interface DKIMOptions {
-        /** 域名 */
-        domainName?: string;
-        /** 密钥选择器 */
-        keySelector?: string;
-        /** 私钥 */
-        privateKey?: string;
-        /** DKIM密钥列表 */
-        keys?: DKIMKey[];
-    }
-
-    /**
-     * DKIM密钥
-     */
-    export interface DKIMKey {
-        /** 密钥选择器 */
-        keySelector: string;
-        /** 域名 */
-        domainName: string;
-    }
-
-    /**
-     * 日志配置选项
-     */
-    export interface LoggerOptions {
-        /** 日志级别 */
-        level?: string;
-        /** 组件名称 */
-        component?: string;
-    }
-
-    /**
-     * 认证配置结果类型
-     */
-    export type AuthConfig = '' | {
-        /** 认证类型 */
-        type: string;
-        /** 用户邮箱 */
-        user: string;
-        /** 认证方法 */
-        method?: string;
-        /** OAuth2实例 */
-        oauth2?: EventEmitter & {
-            provisionCallback?: Function;
-            removeAllListeners?: () => void;
-        };
-        /** 凭证信息 */
-        credentials?: {
-            user: string;
-            pass?: string;
-            options?: any;
-        };
-    };
-
-    /**
-     * 日志记录器接口
-     */
-    export interface Logger {
-        debug(meta: object, message: string, ...args: any[]): void;
-        info(meta: object, message: string, ...args: any[]): void;
-        warn(meta: object, message: string, ...args: any[]): void;
-        error(meta: object, message: string, ...args: any[]): void;
-    }
-
-    // ==================== SMTP传输器配置 ====================
-    // 用于标准SMTP邮件发送，适用于大多数邮件服务商
-
-    /**
-     * SMTP传输器配置接口
-     *
-     * @example
-     * ```javascript
-     * // 基本SMTP配置
-     * {
-     *     host: 'smtp.189.cn',
-     *     port: 465,
-     *     secure: true,
-     *     auth: {
-     *         user: 'abc@189.cn',
-     *         pass: 'password'
-     *     }
-     * }
-     * ```
-     */
-    export interface SmtpConfig extends BaseTransportConfig {
-        /** 主机地址(SMTP服务器地址) */
-        host?: string;
-        /** 服务名称(邮箱服务商名称) */
-        service?: string;
-        /** 端口号(SMTP服务器端口) */
-        port?: number;
-        /** 是否使用SSL/TLS */
-        secure?: boolean;
-        /** 认证信息 */
-        auth?: AuthOptions;
-        /** TLS配置 */
-        tls?: object | boolean;
-        /** DKIM配置 */
-        dkim?: DKIMOptions;
-    }
-
-    /**
-     * SMTP传输器
-     */
-    export class SmtpTransport extends EventEmitter implements Transporter {
-        constructor(options: SmtpConfig);
-        /** 认证配置 */
-        auth?: AuthConfig;
-
-        /** 获取认证信息 */
-        getAuth(authOpts?: any): AuthConfig;
-        /** 发送邮件 */
-        send(mail: MailMessage, callback: (err: Error | null, info: SentMessageInfo) => void): void;
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-        /** 验证连接 */
-        verify(callback: (error: Error | null, success?: boolean) => void): void;
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 选项配置 */
-        options: SmtpConfig;
-        /** 日志记录器 */
-        logger?: Logger;
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-    }
-
-    // ==================== SMTP连接池传输器配置 ====================
-    // 用于高并发邮件发送，支持连接复用
-
-    /**
-     * SMTP连接池配置接口
-     *
-     * @example
-     * ```javascript
-     * // SMTP连接池配置
-     * {
-     *     pool: true,
-     *     host: 'smtp.example.com',
-     *     port: 465,
-     *     secure: true,
-     *     auth: { user: 'user@example.com', pass: 'password' },
-     *     maxConnections: 5,
-     *     maxMessages: 100
-     * }
-     * ```
-     */
-    export interface SmtpPoolConfig extends SmtpConfig {
-        /** 启用连接池 */
-        pool: true;
-        /** 最大连接数 */
-        maxConnections?: number;
-        /** 每个连接最大邮件数 */
-        maxMessages?: number;
-    }
-
-    /**
-     * SMTP连接池传输器
-     */
-    export class SmtpPool extends EventEmitter implements Transporter {
-        constructor(options: SmtpPoolConfig);
-        /** 发送邮件 */
-        send(mail: MailMessage, callback: (err: Error | null, info: SentMessageInfo) => void): void;
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-        /** 验证连接 */
-        verify(callback?: (error: Error | null, success?: boolean) => void): void | Promise<boolean>;
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 日志记录器 */
-        logger: Logger;
-        /** 选项配置 */
-        options: SmtpPoolConfig;
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-    }
-
-    // ==================== Sendmail传输器配置 ====================
-    // 使用系统sendmail命令发送邮件，适用于Linux/Unix系统
-
-    /**
-     * Sendmail传输器配置接口
-     *
-     * @example
-     * ```javascript
-     * // Sendmail配置
-     * {
-     *     sendmail: true,
-     *     path: '/usr/sbin/sendmail',
-     *     args: ['-t', '-i']
-     * }
-     * ```
-     */
-    export interface SendmailConfig extends BaseTransportConfig {
-        /** 启用sendmail传输器 */
-        sendmail: true | string;
-        /** sendmail二进制文件路径 */
-        path?: string;
-        /** 命令行参数 */
-        args?: string[];
-        /** 换行符类型 */
-        newline?: string;
-    }
-
-    /**
-     * Sendmail传输器
-     */
-    export class SendmailTransport implements Transporter {
-        constructor(options?: string | SendmailConfig);
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-        /** 验证连接 */
-        verify?(callback?: (error: Error | null, success?: boolean) => void): void | Promise<boolean>;
-
-        /** 发送邮件 */
-        send(mail: MailMessage, done: (err: Error | null, info: SentMessageInfo) => void): void;
-
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 日志记录器 */
-        logger: Logger;
-        /** 选项配置 */
-        options: SendmailConfig;
-        /** sendmail路径 */
-        path: string;
-        /** 命令行参数 */
-        args: string[] | false;
-        /** 是否使用Windows换行符 */
-        winbreak: boolean;
-        /** 子进程创建函数 */
-        _spawn: typeof import('child_process')['spawn'];
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-
-        // 注意：SendmailTransport不实现on、close、isIdle、verify方法
-    }
-
-    // ==================== 流传输器配置 ====================
-    // 主要用于测试，将邮件输出为流格式
-
-    /**
-     * 流传输器配置接口
-     *
-     * @example
-     * ```javascript
-     * // 流传输器配置
-     * {
-     *     streamTransport: true,
-     *     buffer: true,
-     *     newline: 'unix'
-     * }
-     * ```
-     */
-    export interface StreamTransportConfig extends BaseTransportConfig {
-        /** 启用流传输 */
-        streamTransport: true;
-        /** 是否将消息作为Buffer对象 */
-        buffer?: boolean;
-        /** 换行符类型 */
-        newline?: string;
-    }
-
-    /**
-     * 流传输器
-     */
-    export class StreamTransport implements Transporter {
-        constructor(options: StreamTransportConfig);
-        /** 发送邮件 */
-        send(mail: MailMessage, callback: (err: Error | null, info: StreamSentMessageInfo) => void): void;
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-        /** 验证连接 */
-        verify?(): void | Promise<boolean>;
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 日志记录器 */
-        logger: Logger;
-        /** 选项配置 */
-        options: StreamTransportConfig;
-        /** 是否使用Windows换行符 */
-        winbreak: boolean;
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-
-        // 注意：StreamTransport不实现on、close、isIdle、verify方法
-    }
-
-    /**
-     * 流传输器发送结果
-     */
-    export interface StreamSentMessageInfo extends SentMessageInfo {
-        /** 消息内容（根据buffer选项可能是流或缓冲区） */
-        message: ReadableStream | Buffer | string;
-    }
-
-    // ==================== JSON传输器配置 ====================
-    // 用于调试，将邮件转换为JSON格式输出
-
-    /**
-     * JSON传输器配置接口
-     *
-     * @example
-     * ```javascript
-     * // JSON传输器配置
-     * {
-     *     jsonTransport: true,
-     *     skipEncoding: false
-     * }
-     * ```
-     */
-    export interface JsonTransportConfig extends BaseTransportConfig {
-        /** 启用JSON传输 */
-        jsonTransport: true;
-        /** 是否跳过编码 */
-        skipEncoding?: boolean;
-    }
-
-    /**
-     * JSON传输器
-     */
-    export class JsonTransport implements Transporter {
-        constructor(options: JsonTransportConfig);
-
-        /** 发送邮件 */
-        send(mail: MailMessage, callback: (err: Error | null, info: JsonSentMessageInfo) => void): void;
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-        /** 验证连接 */
-        verify?(): void | Promise<boolean>;
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 日志记录器 */
-        logger: Logger;
-        /** 选项配置 */
-        options: JsonTransportConfig;
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-
-        // 注意：JsonTransport不实现on、close、isIdle、verify方法
-    }
-
-    /**
-     * JSON传输器发送结果
-     */
-    export interface JsonSentMessageInfo extends SentMessageInfo {
-        /** 消息内容（根据skipEncoding选项可能是JSON字符串或原始数据对象） */
-        message: string | object;
-    }
-
-    // ==================== SES传输器配置 ====================
-    // 用于通过AWS Simple Email Service发送邮件
-
-    /**
-     * SES传输器配置接口
-     *
-     * @example
-     * ```javascript
-     * // SES传输器配置
-     * {
-     *     SES: {
-     *         sesClient: new SESClient({ region: 'us-east-1' }),
-     *         SendEmailCommand: SendEmailCommand
-     *     }
-     * }
-     * ```
-     */
-    export interface SesTransportConfig extends BaseTransportConfig {
-        /** AWS SES客户端配置 */
-        SES: {
-            /** AWS SES客户端实例 */
-            sesClient: any;
-            /** SendEmailCommand构造函数 */
-            SendEmailCommand: new (data: any) => any;
-        };
-    }
-
-    /**
-     * SES传输器
-     */
-    export class SesTransport extends EventEmitter implements Transporter {
-        constructor(options: SesTransportConfig);
-
-        /**
-         * 发送邮件
-         */
-        send(mail: MailMessage, callback: (err: Error | null, info: SesSentMessageInfo) => void): void;
-
-        /**
-         * 验证SES配置
-         */
-        verify(callback?: (error: Error | null, success?: boolean) => void): Promise<boolean> | void;
-
-        /** 事件监听方法 */
-        on(event: string, listener: (...args: any[]) => void): this;
-        /** 关闭连接方法 */
-        close?(): void | Promise<void>;
-        /** 检查是否空闲 */
-        isIdle?(): boolean;
-
-        /** AWS SES实例 */
-        ses: any;
-        /** 日志记录器 */
-        logger: Logger;
-        /** 选项配置 */
-        options: SesTransportConfig;
-        /** 传输器名称 */
-        name: string;
-        /** 版本号 */
-        version: string;
-        /** 关联的Mail实例 */
-        mailer?: Mailer;
-
-        // 注意：SesTransport不实现on、close、isIdle方法
-    }
-
-    /**
-     * SES传输器发送结果
-     */
-    export interface SesSentMessageInfo extends SentMessageInfo { }
 }

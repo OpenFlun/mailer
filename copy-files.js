@@ -11,7 +11,12 @@ const __filename = fileURLToPath(import.meta.url), __dirname = path.dirname(__fi
     // 源文件和目标文件路径
     sourceFile = path.join(__dirname, fileName), targetFile = path.join(targetDir, fileName);
 
-function copyFile() {
+/**
+ * 复制文件到项目根目录
+ * >查看定义:@see {@link copyFile}
+ * @returns {boolean} - 复制是否成功
+ */
+const copyFile = () => {
     console.log(`🔍 检查 ${fileName} 文件...`), console.log(`📁 项目根目录:${targetDir}`);
     try {
         if (fs.existsSync(targetFile)) return true;  // 如果目标文件存在,则返回true并结束函数

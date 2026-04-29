@@ -29,10 +29,10 @@ npm i flun-mail
 
 ## 优势
 
-- **安全性**：不依赖外部服务，数据完全可控
-- **真实性**：使用真实邮箱测试，结果更准确
+- **安全性**：不依赖外部服务,数据完全可控
+- **真实性**：使用真实邮箱测试,结果更准确
 - **灵活性**：支持各种邮件服务商（Gmail、Outlook、QQ邮箱等）
-- **简单性**：安装时在项目根目录动态创建邮件示例,配置更直接，无需理解复杂的测试服务概念
+- **简单性**：安装时在项目根目录动态创建邮件示例,配置更直接,无需理解复杂的测试服务概念
 - **配置验证**：发送前可验证配置,确保必要的配置项已填写
 - **清晰的错误提示**：指导用户正确使用
 
@@ -49,7 +49,7 @@ const transporter = createTransport({
     // 邮箱服务商SMTP服务器地址(Gmail: 'smtp.gmail.com'; QQ: 'smtp.qq.com'; 163: 'smtp.163.com')
     host: 'smtp.your-email-provider.com',
 
-    // 端口号，通常为 465(SSL) 或 587(TLS)
+    // 端口号,通常为 465(SSL) 或 587(TLS)
     port: 587,
 
     // 是否使用SSL/TLS
@@ -58,7 +58,7 @@ const transporter = createTransport({
     auth: {
         user: 'your-email@example.com', // 您的邮箱地址
 
-        // 您的邮箱密码或授权码(Gmail需要应用专用密码，QQ邮箱需要授权码)
+        // 您的邮箱密码或授权码(Gmail需要应用专用密码,QQ邮箱需要授权码)
         pass: 'your-password-or-app-password'
     }
 });
@@ -95,7 +95,7 @@ const transporter = createTransport({
      service: 'QQ',
     auth: {
         user: 'your-email@qq.com',
-        pass: 'your-authorization-code' // QQ邮箱授权码，非登录密码
+        pass: 'your-authorization-code' // QQ邮箱授权码,非登录密码
     }
 });
 ```
@@ -113,7 +113,7 @@ const transporter = createTransport({
 
 ## 配置验证
 
-在创建传输器前验证配置的有效性，避免运行时错误。
+在创建传输器前验证配置的有效性,避免运行时错误;
 
 ### 验证配置示例
 
@@ -144,7 +144,7 @@ if (validation2.valid) {
     const transporter = createTransport(objectConfig);
     console.log('传输器创建成功');
 } else {
-    console.error('配置无效，无法创建传输器:', validation2.errors);
+    console.error('配置无效,无法创建传输器:', validation2.errors);
 }
 
 // 3. 验证无效配置
@@ -244,7 +244,7 @@ async function sendBulkEmails() {
       from: '"系统通知" <noreply@example.com>',
       to: email.to,
       subject: `您好 ${email.name}`,
-      html: `<p>亲爱的 ${email.name}，这是一封测试邮件</p>`
+      html: `<p>亲爱的 ${email.name},这是一封测试邮件</p>`
     };
 
     try {
@@ -270,7 +270,7 @@ import { createTransport } from 'flun-mail';
 // 1. 创建Sendmail传输器
 const transporter = createTransport({
   sendmail: true,
-  path: '/usr/sbin/sendmail' // 默认路径，通常不需要指定
+  path: '/usr/sbin/sendmail' // 默认路径,通常不需要指定
 });
 
 // 2. 配置邮件内容
@@ -278,8 +278,8 @@ const mailOptions = {
   from: '"系统" <system@server.com>',
   to: 'admin@example.com',
   subject: '服务器报警',
-  text: 'CPU使用率超过90%，请及时处理！',
-  html: '<h1>服务器报警</h1><p>CPU使用率超过90%，请及时处理！</p>'
+  text: 'CPU使用率超过90%,请及时处理！',
+  html: '<h1>服务器报警</h1><p>CPU使用率超过90%,请及时处理！</p>'
 };
 
 // 3. 发送邮件
@@ -311,7 +311,7 @@ const mailOptions = {
   from: '"测试" <test@example.com>',
   to: 'developer@example.com',
   subject: '测试邮件 - 不实际发送',
-  text: '这封邮件不会实际发送，只会输出到控制台或文件',
+  text: '这封邮件不会实际发送,只会输出到控制台或文件',
   html: '<b>HTML内容</b>',
   attachments: [
     {
@@ -451,12 +451,12 @@ transporter.sendMail(mailOptions)
 2. **设置邮件内容** - 定义发件人、收件人、主题、内容等
 3. **发送邮件** - 执行发送操作并处理结果
 
-对于生产环境，推荐使用 SMTP 或 SES；对于开发和测试，可以使用流传输或 JSON 传输;
+对于生产环境,推荐使用 SMTP 或 SES；对于开发和测试,可以使用流传输或 JSON 传输;
 
 ---
 ## 错误处理
 
-库提供了详细的错误信息，帮助您快速定位问题：
+库提供了详细的错误信息,帮助您快速定位问题：
 
 - **配置错误**：如缺少必要参数、无效的端口号等
 - **连接错误**：如无法连接到SMTP服务器

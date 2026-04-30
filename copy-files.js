@@ -31,6 +31,5 @@ const copyFile = () => {
     }
 }
 
-// 执行脚本并导出函数
 if (process.argv[1] === __filename) copyFile();
 export { copyFile };

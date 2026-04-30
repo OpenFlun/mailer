@@ -1,5 +1,5 @@
 {
-  "name": "flun-mail",
+  "name": "@flun/mailer",
   "version": "2.1.3",
   "description": "A powerful and flexible email sending library for Node.js with multiple transport support (SMTP, SMTP Pool, Sendmail, Stream, JSON, SES)",
   "type": "module",
@@ -17,8 +17,8 @@
     "build": "echo 'No build process required'"
   },
   "bin": {
-    "flun-mail-init": "copy-files.js",
-    "flun-mail": "index.js"
+    "mailer-init": "copy-files.js",
+    "mailer": "index.js"
   },
   "files": [
     "index.js",
@@ -44,17 +44,16 @@
     "mailer"
   ],
   "author": "flun <cn@flun.top>",
-  "contributors": [
-    "flun <cn@flun.top>"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flunGit/flun_mail.git"
+    "url": "git+https://github.com/flunGit/mailer.git"
   },
-  "homepage": "https://www.npmjs.com/package/flun-mail#readme",
+  "homepage": "https://www.npmjs.com/package/@flun/mailer#readme",
   "bugs": {
-    "url": "https://github.com/flunGit/flun_mail/issues",
-    "email": "cn@flun.top"
+    "url": "https://github.com/flunGit/mailer/issues"
   },
   "license": "ISC",
   "engines": {
@@ -75,9 +74,5 @@
     "lib": "lib",
     "example": "examples",
     "test": "tests"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
   }
 }

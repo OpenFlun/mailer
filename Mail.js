@@ -1,5 +1,5 @@
 
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 // 邮箱配置示例 - 请根据您的邮箱服务商修改以下配置
 const transporter = createTransport({
     // 步骤1:填写服务器地址,端口和是否启用SSL/TLS

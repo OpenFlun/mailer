@@ -1,4 +1,4 @@
-# flun-mail - 轻量级邮件发送库
+# @flun/mailer - 轻量级邮件发送库
 
 一个简单易用的 Node.js 邮件发送库,支持多种邮件服务商,无需依赖外部邮件测试服务;
 ### 本包以 ESM 模块系统编写->未来趋势;只要你的 Node.js 版本大于22.12,可保留CJS `require()` 语法调用,否则请使用 `import` 语法;
@@ -24,7 +24,7 @@ graph TD
 ## 安装
 
 ```sh
-npm i flun-mail
+npm i @flun/mailer
 ```
 
 ## 优势
@@ -41,7 +41,7 @@ npm i flun-mail
 ### 邮件配置及发送(标准配置示例)
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 
 // 邮箱配置示例 - 请根据您的邮箱服务商修改以下配置
 const transporter = createTransport({
@@ -118,7 +118,7 @@ const transporter = createTransport({
 ### 验证配置示例
 
 ```javascript
-import { validateConfig } from 'flun-mail';
+import { validateConfig } from '@flun/mailer';
 
 // 1. 验证URL格式配置
 const urlConfig = 'smtps://user:pass@smtp.your-email-provider.com:465';
@@ -213,7 +213,7 @@ sendEmail();
 ## 1. SMTP 连接池（高并发场景）
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 
 // 1. 创建连接池传输器
 const transporter = createTransport({
@@ -265,7 +265,7 @@ sendBulkEmails();
 ## 2. Sendmail 传输（Linux/Unix 系统）
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 
 // 1. 创建Sendmail传输器
 const transporter = createTransport({
@@ -296,7 +296,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 ## 3. 流传输（用于测试和开发）
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 import fs from 'fs';
 
 // 1. 创建流传输器
@@ -339,7 +339,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 ## 4. JSON 传输（用于调试）
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 
 // 1. 创建JSON传输器
 const transporter = createTransport({
@@ -374,7 +374,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 ## 5. SES 传输（AWS 亚马逊服务）
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 import { SESClient } from '@aws-sdk/client-ses';
 
 // 1. 配置 AWS SES
@@ -421,7 +421,7 @@ sendWithSES();
 ## 6. 使用连接字符串的简便方式
 
 ```javascript
-import { createTransport } from 'flun-mail';
+import { createTransport } from '@flun/mailer';
 
 // 1. 使用连接字符串创建传输器
 const transporter = createTransport(

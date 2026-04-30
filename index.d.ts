@@ -245,7 +245,7 @@ declare module './lib/smtp-connection/index.js' {
 /**
  * ```js
  * // 文件导出内容
- * class SmtpPool{}; // 为 flun-mail 创建 SMTP 连接池传输对象;
+ * class SmtpPool{}; // 为 @flun/mailer 创建 SMTP 连接池传输对象;
  * ```
  * >查看定义:@see {@link SmtpPool}
  */
@@ -494,8 +494,8 @@ declare module './lib/xoauth2.js' {
  * >
  * ```js
  *  // 发送邮件示例
- *  import { createTransport } from 'flun-mail';
- *  import { env } from 'flun-env'; // 注意:flun-env需自行安装
+ *  import { createTransport } from '@flun/mailer';
+ *  import { env } from '@flun/env'; // 注意:@flun/env需自行安装
  *
  *  // 请根据您的邮箱服务商修改以下配置
  *  transporter = createTransport({

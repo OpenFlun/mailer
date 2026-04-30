@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url), __dirname = path.dirname(__filename),
 
     // 要拷贝和写入的文件名和目标（项目根目录）
-    fileName = 'Mail.js', targetDir = path.resolve(__dirname, '../..'),
+    fileName = 'Mail.js', targetDir = path.resolve(__dirname, '../../..'),
 
     // 源文件和目标文件路径
     sourceFile = path.join(__dirname, fileName), targetFile = path.join(targetDir, fileName);

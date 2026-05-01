@@ -2,7 +2,8 @@
 .git/
 .gitignore
 .gitattributes
-publish.ps1
+node_modules/
+*.ps1
 .npmrc
 .github/
 .idea/

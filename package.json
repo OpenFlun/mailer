@@ -41,11 +41,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flunGit/mailer.git"
+    "url": "git+https://github.com/OpenFlun/mailer.git"
   },
   "homepage": "https://www.npmjs.com/package/@flun/mailer#readme",
   "bugs": {
-    "url": "https://github.com/flunGit/mailer/issues"
+    "url": "https://github.com/OpenFlun/mailer/issues"
   },
   "license": "ISC",
   "engines": {

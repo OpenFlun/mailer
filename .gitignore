@@ -1,4 +1,5 @@
 .npmrc
+.vs/
 .vscode/
 node_modules/
 *.ps1

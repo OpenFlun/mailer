@@ -35,7 +35,7 @@
     "email-sender",
     "mailer"
   ],
-  "author": "flun <cn@flun.top>",
+  "author": "flun <open@flun.top>",
   "publishConfig": {
     "access": "public"
   },

@@ -67,11 +67,5 @@
     "example": "examples",
     "test": "tests"
   },
-  "scripts": {
-    "postinstall": "node copy-files.js 2>&1",
-    "start": "node index.js",
-    "dev": "node --watch index.js",
-    "lint": "eslint .",
-    "build": "echo 'No build process required'"
-  }
+  "scripts": {}
 }

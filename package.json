@@ -43,7 +43,7 @@
     "type": "git",
     "url": "git+https://github.com/OpenFlun/mailer.git"
   },
-  "homepage": "https://www.npmjs.com/package/@flun/mailer#readme",
+  "homepage": "https://github.com/OpenFlun/mailer#readme",
   "bugs": {
     "url": "https://github.com/OpenFlun/mailer/issues"
   },
@@ -53,7 +53,7 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.1142.0"
+    "@aws-sdk/client-sesv2": "^3.1146.0"
   },
   "devDependencies": {
     "eslint": "^10.11.0",

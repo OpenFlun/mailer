@@ -34,7 +34,8 @@ import {
     PK, regexs, resetRegex, dnsLookup, dnsResolve, format, isIP, netConnect, fsReadStream, osHostname, nmfetch,
     getLogger, resolveHostname, newURL, parseConnectionUrl, parseDataURI, callbackPromise, resolveStream, resolveContent,
     assign, encodeXText, initSmtpConstructor, getSocket, cleanup, createSmtpConnection, setupConnectionHandlers,
-    performSmtpAuthentication, createAuthConfig, prepareMessageForSending, handleSendResult, verifySmtp
+    performSmtpAuthentica
+ *tion, createAuthConfig, prepareMessageForSending, handleSendResult, verifySmtp
 } from './lib/shared.js';
 import { SmtpTransport } from './lib/smtp-transport.js';
 import { StreamTransport } from './lib/stream-transport.js';
@@ -150,7 +151,8 @@ declare module './lib/mailer/mail-message.js' {
  * detectMimeType();   // 根据文件名检测MIME类型;
  * foldLines();        // 折叠长行,适用于折叠头行(afterSpace=false)和流文本(afterSpace=true);
  * ```
- * >查看定义:@see {@link isPlainText}、{@link hasLongerLines}、{@link encodeWord}、{@link encodeWords}、{@link buildHeaderValue}、
+ * >查看定义:@see {@link isPlainText}、{@link hasLongerLines}、
+ *{@link encodeWord}、{@link encodeWords}、{@link buildHeaderValue}、
  * {@link parseHeaderValue}、{@link detectExtension}、{@link detectMimeType}、{@link foldLines}
  */
 declare module './lib/mime-funcs/index.js' {
@@ -406,11 +408,11 @@ declare module './lib/ses-transport.js' {
  * // 文件导出内容
  * const PK={};                 // package.json 包对象(含 name,,version,,homepage);
  * const regexs={};             // 常用正则表达式集合;
- * resetRegex();                // 重置正则表达式（清除 lastIndex）;
+ * resetRegex();                // 重置正则表达式(清除 lastIndex);
  * dnsLookup();                 // dns.lookup 的引用;
  * dnsResolve();                // dns.resolve 的引用;
  * format();                    // util.format 的引用;
- * isIP();                      // 检查字符串是否为 IP 地址（v4 或 v6）;
+ * isIP();                      // 检查字符串是否为 IP 地址(v4 或 v6);
  * netConnect();                // net.connect 的引用;
  * fsReadStream();              // fs.createReadStream 的引用;
  * osHostname();                // os.hostname 的引用;
@@ -420,11 +422,11 @@ declare module './lib/ses-transport.js' {
  * newURL();                    // 安全地创建 URL 对象;
  * parseConnectionUrl();        // 解析连接 URL 为配置对象;
  * parseDataURI();              // 解析 Data URI 字符串;
- * callbackPromise();           // 创建 Promise 回调包装器（resolve, reject）;
+ * callbackPromise();           // 创建 Promise 回调包装器(resolve, reject);
  * resolveStream();             // 将可读流完整读取到 Buffer 中;
  * resolveContent();            // 解析字符串或 Buffer 值的内容;
- * assign();                    // 合并对象属性（深度合并 tls 与 auth）;
- * encodeXText();               // XText 编码（SMTP 扩展）;
+ * assign();                    // 合并对象属性(深度合并 tls 与 auth);
+ * encodeXText();               // XText 编码(SMTP 扩展);
  * initSmtpConstructor();       // 初始化 SMTP 传输对象的公共构造函数逻辑;
  * getSocket();                 // 获取代理套接字的占位函数;
  * cleanup();                   // 用于清理状态对象;
@@ -441,7 +443,8 @@ declare module './lib/ses-transport.js' {
  * {@link resolveHostname}、{@link newURL}、{@link parseConnectionUrl}、{@link parseDataURI}、{@link callbackPromise}、
  * {@link resolveStream}、{@link resolveContent}、{@link assign}、{@link encodeXText}、{@link initSmtpConstructor}、
  * {@link getSocket}、{@link cleanup}、{@link createSmtpConnection}、{@link setupConnectionHandlers}、
- * {@link performSmtpAuthentication}、{@link createAuthConfig}、 {@link prepareMessageForSending}、{@link handleSendResult}、
+ * {@link performSmtpAuthentication}、{@link createAuthConfig}、
+ * {@link prepareMessageForSending}、{@link handleSendResult}、
  * {@link verifySmtp}
  */
 declare module './lib/shared.js' {
@@ -485,7 +488,7 @@ declare module './lib/xoauth2.js' {
 }
 
 /**
- * 邮件发送模块 主要功能：
+ * 邮件发送模块 主要功能:
  * ```js
  * createTransport();   // 创建邮件传输器
  * validateConfig();    // 验证配置
@@ -515,7 +518,7 @@ declare module './lib/xoauth2.js' {
  *      to: 'xyz@189.cn',          // 收件人
  *      subject: '测试邮件',        // 邮件主题
  *      text: '纯文本测试',         // 纯文本内容
- *      html: '<b>html格式测试</b>' // HTML内容（可选;注:html内容优先级高于纯文本内容）
+ *      html: '<b>html格式测试</b>' // HTML内容(可选;注:html内容优先级高于纯文本内容)
  *  }, (error, info) => {
  *      if (error) console.error('发送失败:', error);
  *      else console.log('发送成功:', info.response);
@@ -533,7 +536,7 @@ declare module './index.js' {
     /**
      * 创建邮件传输器
      *
-     * 根据配置自动选择合适的传输器类型：
+     * 根据配置自动选择合适的传输器类型:
      * - 启用连接池: pool=true -> SmtpPool
      * - 启用sendmail: sendmail=true或字符串 -> SendmailTransport
      * - 启用流传输: streamTransport=true -> StreamTransport
@@ -593,7 +596,7 @@ declare module './index.js' {
 
     /**
      * 传输器配置类型
-     * 可以是：连接URL字符串、已封装好的传输器实例、或具体的传输器配置对象
+     * 可以是:连接URL字符串、已封装好的传输器实例、或具体的传输器配置对象
      */
     export type TransportConfig = string | Transporter | SpecificTransportConfig;
 
@@ -635,7 +638,7 @@ declare module './index.js' {
          */
         sendMail(mail: MailData, callback: (err: Error | null, info: SentMessageInfo) => void): void;
         /**
-         * 发送邮件（Promise 形式）
+         * 发送邮件(Promise 形式)
          * @param mail 邮件内容
          */
         sendMail(mail: MailData): Promise<SentMessageInfo>;
@@ -659,7 +662,7 @@ declare module './index.js' {
      * 具体的传输器配置对象
      */
     export interface SpecificTransportConfig {
-        /** 连接URL（优先级高于其他配置） */
+        /** 连接URL(优先级高于其他配置) */
         url?: string;
         /** SMTP服务器地址 */
         host?: string;
@@ -688,7 +691,7 @@ declare module './index.js' {
         maxConnections?: number;
         /** 单个连接最大消息数 */
         maxMessages?: number;
-        /** 使用 sendmail 发送（布尔值或sendmail路径） */
+        /** 使用 sendmail 发送(布尔值或sendmail路径) */
         sendmail?: boolean | string;
         /** 使用流传输器输出 */
         streamTransport?: boolean;
@@ -698,7 +701,7 @@ declare module './index.js' {
         SES?: {
             [key: string]: any;
         };
-        /** 自定义传输器发送方法（若直接提供传输器实例则无需配置） */
+        /** 自定义传输器发送方法(若直接提供传输器实例则无需配置) */
         send?: (mail: MailMessage, callback: (err: Error | null, info: SentMessageInfo) => void) => void;
         /** 其他扩展字段 */
         [key: string]: any;
@@ -708,9 +711,9 @@ declare module './index.js' {
      * 邮件数据对象,描述邮件内容及收件人信息
      */
     export interface MailData {
-        /** 发件人地址（格式："名称 <地址>" 或纯地址） */
+        /** 发件人地址(格式:"名称 <地址>" 或纯地址) */
         from?: string;
-        /** 收件人地址（字符串或数组） */
+        /** 收件人地址(字符串或数组) */
         to?: string | string[];
         /** 抄送 */
         cc?: string | string[];
@@ -720,7 +723,7 @@ declare module './index.js' {
         subject?: string;
         /** 纯文本内容 */
         text?: string;
-        /** HTML内容（优先级高于纯文本） */
+        /** HTML内容(优先级高于纯文本) */
         html?: string;
         /** 附件列表 */
         attachments?: Attachment[];
@@ -735,7 +738,7 @@ declare module './index.js' {
     }
 
     /**
-     * 内部使用的邮件消息对象（传递给底层传输器）
+     * 内部使用的邮件消息对象(传递给底层传输器)
      */
     export interface MailMessage {
         /** 信封信息 */
@@ -745,7 +748,7 @@ declare module './index.js' {
         };
         /** 原始邮件数据 */
         data?: string | Buffer | object;
-        /** 消息内容（可能为字符串或Buffer） */
+        /** 消息内容(可能为字符串或Buffer) */
         message?: string | Buffer;
         /** 其他传输器需要的元数据 */
         [key: string]: any;
@@ -757,13 +760,13 @@ declare module './index.js' {
     export interface Attachment {
         /** 文件名 */
         filename?: string;
-        /** 内容（支持字符串、Buffer、流） */
+        /** 内容(支持字符串、Buffer、流) */
         content?: string | Buffer | NodeJS.ReadableStream;
         /** 文件路径 */
         path?: string;
         /** MIME类型 */
         contentType?: string;
-        /** 内嵌ID（用于html内嵌图片） */
+        /** 内嵌ID(用于html内嵌图片) */
         cid?: string;
         /** 编码 */
         encoding?: string;
@@ -805,7 +808,7 @@ declare module './index.js' {
     }
 
     /**
-     * 日志记录器接口（传输器内部使用）
+     * 日志记录器接口(传输器内部使用)
      */
     export interface Logger {
         info(...args: any[]): void;

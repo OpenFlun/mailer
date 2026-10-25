@@ -1,7 +1,7 @@
 {
   "name": "@flun/mailer",
   "version": "2.1.24",
-  "description": "A powerful and flexible email sending library for Node.js with multiple transport support (SMTP, SMTP Pool, Sendmail, Stream, JSON, SES)",
+  "description": "Node.js 邮件发送库;支持 SMTP、SMTP Pool、Sendmail、Stream、JSON、SES 多种传输;",
   "type": "module",
   "exports": {
     ".": "./index.js"
@@ -53,10 +53,10 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
-    "@aws-sdk/client-sesv2": "^3.1146.0"
+    "@aws-sdk/client-sesv2": "^3.1156.0"
   },
   "devDependencies": {
-    "eslint": "^10.11.0",
+    "eslint": "^10.13.0",
     "jest": "^30.5.2"
   },
   "peerDependencies": {

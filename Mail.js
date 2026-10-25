@@ -13,7 +13,7 @@ const transporter = createTransport({
     // 步骤2:填写SMTP服务器的账号和密码
     auth: {
         user: 'your-email@example.com',       // 您的邮箱地址
-        pass: 'your-password-or-app-password' // 您的邮箱密码或授权码(Gmail需要应用专用密码，QQ邮箱需要授权码)
+        pass: 'your-password-or-app-password' // 您的邮箱密码或授权码(Gmail需要应用专用密码,QQ邮箱需要授权码)
     }
 });
 
@@ -23,7 +23,7 @@ transporter.sendMail({
     to: 'recipient@example.com',        // 收件人
     subject: '测试邮件',                 // 邮件主题
     text: '这是一封测试邮件(text)',       // 纯文本内容
-    html: '<b>这是一封测试邮件(html)</b>' // HTML内容（可选;注:html内容优先级高于纯文本内容)
+    html: '<b>这是一封测试邮件(html)</b>' // HTML内容(可选;注:html内容优先级高于纯文本内容)
 }, (error, info) => {
     if (error) console.error('发送失败:', error);
     else console.log('发送成功:', info.response);

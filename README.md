@@ -1,7 +1,9 @@
 # @flun/mailer - 轻量级邮件发送库
 
 一个简单易用的 Node.js 邮件发送库,支持多种邮件服务商,无需依赖外部邮件测试服务;
-### 本包以 ESM 模块系统编写->未来趋势;只要你的 Node.js 版本大于22.12,可保留CJS `require()` 语法调用,否则请使用 `import` 语法;
+### 本包以 ESM 模块系统编写
+
+-> 未来趋势;只要你的 Node.js 版本大于22.12,可保留CJS `require()` 语法调用,否则请使用 `import` 语法;
 
 ## 项目运行导图
 
@@ -24,7 +26,8 @@ graph TD
 
 ### 允许安装脚本执行
 
-本包在安装时可能触发某些依赖包的自动脚本（如 `postinstall` 等）;如果你的 npm 全局配置或项目配置禁止了脚本执行（例如设置了 `ignore-scripts=true`）,可能会导致安装不完整或运行时异常;
+本包在安装时可能触发某些依赖包的自动脚本(如 `postinstall` 等);如果你的 npm 全局配置或项目配置禁止了脚本执行(例如设置了 
+`ignore-scripts=true`),可能会导致安装不完整或运行时异常;
 
 推荐在项目根目录的 `package.json` 中添加 `allowScripts` 字段,显式放行本包及其依赖的脚本:
 
@@ -32,12 +35,13 @@ graph TD
 {
   "allowScripts": {
     "@flun/mailer": true
-    // 如果依赖的其它包（如 bcrypt、electron-winstaller 等）也有脚本,请按需添加,格式相同
+    // 如果依赖的其它包(如 bcrypt、electron-winstaller 等)也有脚本,请按需添加,格式相同
   }
 }
 ```
 
-> 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`（表示关闭脚本拦截,所有脚本均允许执行）,或删除 `ignore-scripts` 字段;
+> 如果你信任所有安装包,也可以直接在项目 `.npmrc` 中设置 `allow-scripts = false`(表示关闭脚本拦截,所有脚本均允许执行),
+  或删除 `ignore-scripts` 字段;
 
 ---
 
@@ -49,12 +53,12 @@ npm i @flun/mailer
 
 ## 优势
 
-- **安全性**：不依赖外部服务,数据完全可控
-- **真实性**：使用真实邮箱测试,结果更准确
-- **灵活性**：支持各种邮件服务商（Gmail、Outlook、QQ邮箱等）
-- **简单性**：安装时在项目根目录动态创建邮件示例,配置更直接,无需理解复杂的测试服务概念
-- **配置验证**：发送前可验证配置,确保必要的配置项已填写
-- **清晰的错误提示**：指导用户正确使用
+- **安全性**:不依赖外部服务,数据完全可控
+- **真实性**:使用真实邮箱测试,结果更准确
+- **灵活性**:支持各种邮件服务商(Gmail、Outlook、QQ邮箱等)
+- **简单性**:安装时在项目根目录动态创建邮件示例,配置更直接,无需理解复杂的测试服务概念
+- **配置验证**:发送前可验证配置,确保必要的配置项已填写
+- **清晰的错误提示**:指导用户正确使用
 
 ## 快速开始
 
@@ -89,7 +93,7 @@ transporter.sendMail({
     to: 'recipient@example.com',    // 收件人
     subject: '测试邮件',             // 邮件主题
     text: '这是一封测试邮件(text)',         // 纯文本内容
-    html: '<b>这是一封测试邮件(html)</b>'   // HTML内容（可选;注:html内容优先级高于纯文本内容)
+    html: '<b>这是一封测试邮件(html)</b>'   // HTML内容(可选;注:html内容优先级高于纯文本内容)
 }, (error, info) => {
     if (error)  console.error('发送失败:', error);
     else console.log('发送成功:', info.response);
@@ -229,8 +233,8 @@ async function sendEmail() {
 sendEmail();
 ```
 ---
-：#其它使用示例:
-## 1. SMTP 连接池（高并发场景）
+:#其它使用示例:
+## 1. SMTP 连接池(高并发场景)
 
 ```javascript
 import { createTransport } from '@flun/mailer';
@@ -282,7 +286,7 @@ async function sendBulkEmails() {
 sendBulkEmails();
 ```
 
-## 2. Sendmail 传输（Linux/Unix 系统）
+## 2. Sendmail 传输(Linux/Unix 系统)
 
 ```javascript
 import { createTransport } from '@flun/mailer';
@@ -298,8 +302,8 @@ const mailOptions = {
   from: '"系统" <system@server.com>',
   to: 'admin@example.com',
   subject: '服务器报警',
-  text: 'CPU使用率超过90%,请及时处理！',
-  html: '<h1>服务器报警</h1><p>CPU使用率超过90%,请及时处理！</p>'
+  text: 'CPU使用率超过90%,请及时处理!',
+  html: '<h1>服务器报警</h1><p>CPU使用率超过90%,请及时处理!</p>'
 };
 
 // 3. 发送邮件
@@ -313,7 +317,7 @@ transporter.sendMail(mailOptions, (error, info) => {
 });
 ```
 
-## 3. 流传输（用于测试和开发）
+## 3. 流传输(用于测试和开发)
 
 ```javascript
 import { createTransport } from '@flun/mailer';
@@ -341,7 +345,7 @@ const mailOptions = {
   ]
 };
 
-// 3. 发送邮件（实际上只是生成邮件源码）
+// 3. 发送邮件(实际上只是生成邮件源码)
 transporter.sendMail(mailOptions, (error, info) => {
   if (error) {
     console.log('生成邮件失败:', error);
@@ -349,14 +353,14 @@ transporter.sendMail(mailOptions, (error, info) => {
     console.log('邮件源码:');
     console.log(info.message.toString());
 
-    // 可选：保存到文件
+    // 可选:保存到文件
     fs.writeFileSync('debug-email.eml', info.message.toString());
     console.log('邮件已保存到 debug-email.eml');
   }
 });
 ```
 
-## 4. JSON 传输（用于调试）
+## 4. JSON 传输(用于调试)
 
 ```javascript
 import { createTransport } from '@flun/mailer';
@@ -380,18 +384,18 @@ transporter.sendMail(mailOptions, (error, info) => {
   if (error) {
     console.log('错误:', error);
   } else {
-    console.log('邮件信息（JSON格式）:');
+    console.log('邮件信息(JSON格式):');
     console.log(JSON.stringify(info.message, null, 2));
 
-    // info.message 包含：
-    // - envelope: 信封信息（发件人、收件人）
+    // info.message 包含:
+    // - envelope: 信封信息(发件人、收件人)
     // - messageId: 邮件ID
     // - response: 响应信息
   }
 });
 ```
 
-## 5. SES 传输（AWS 亚马逊服务）
+## 5. SES 传输(AWS 亚马逊服务)
 
 ```javascript
 import { createTransport } from '@flun/mailer';
@@ -466,22 +470,22 @@ transporter.sendMail(mailOptions)
   });
 ```
 
-每个示例都包含了：
+每个示例都包含了:
 1. **配置传输器** - 创建特定类型的邮件传输器
 2. **设置邮件内容** - 定义发件人、收件人、主题、内容等
 3. **发送邮件** - 执行发送操作并处理结果
 
-对于生产环境,推荐使用 SMTP 或 SES；对于开发和测试,可以使用流传输或 JSON 传输;
+对于生产环境,推荐使用 SMTP 或 SES;对于开发和测试,可以使用流传输或 JSON 传输;
 
 ---
 ## 错误处理
 
-库提供了详细的错误信息,帮助您快速定位问题：
+库提供了详细的错误信息,帮助您快速定位问题:
 
-- **配置错误**：如缺少必要参数、无效的端口号等
-- **连接错误**：如无法连接到SMTP服务器
-- **认证错误**：如用户名或密码错误
-- **发送错误**：如收件人地址无效、邮件被拒绝等
+- **配置错误**:如缺少必要参数、无效的端口号等
+- **连接错误**:如无法连接到SMTP服务器
+- **认证错误**:如用户名或密码错误
+- **发送错误**:如收件人地址无效、邮件被拒绝等
 
 ## 注意事项
 
